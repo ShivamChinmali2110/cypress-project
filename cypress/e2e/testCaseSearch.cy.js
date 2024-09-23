@@ -5,7 +5,7 @@ describe('Test Case: Verify Product Search Functionality', () => {
     
     // Function to navigate to the products page
     const navigateToProductsPage = () => {
-        cy.contains('Products').click() // Assumes 'Products' link is available in the navbar
+        cy.contains('Products').click() // Assuming 'Products' link is available in the navbar
         cy.url().should('include', '/products') // Verify the URL includes '/products'
     }
 
@@ -33,7 +33,7 @@ describe('Test Case: Verify Product Search Functionality', () => {
         navigateToProductsPage()
 
         // Step 3: Search for a valid product
-        searchProduct('Dress')
+        searchProduct('Winter Top')
 
         // Step 4: Verify that relevant products are displayed
         verifySearchResults(true)

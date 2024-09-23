@@ -1,45 +1,52 @@
 // Import the user credentials from the JSON file
-const userCredentials = require('../fixtures/user-credentials.json')
+const userCredentials = require('../fixtures/user-credentials.json');
 
-describe('Test Case 26: Verify Scroll Up without "Arrow" Button and Scroll Down Functionality & Delete Account', () => {
-    it("Test Case 26: Verify Scroll Up without 'Arrow' Button and Scroll Down Functionality & Delete Account", () => {
+describe('Test Case 26: Verify Scroll Up without "Arrow" Button, Scroll Down Functionality & Delete Account', () => {
+
+    beforeEach(() => {
+        // Visiting the base URL before each test
+        cy.visit(userCredentials.baseUrl);
+    });
+
+    it("should scroll to the bottom and back up without the 'Arrow' button", () => {
         
-        // Step 1: Scroll Down to the Bottom of the Page
-        cy.visit(userCredentials.baseUrl)
-
-        // Capture the position of the header before scrolling
+        // Step 1: Capture the initial position of the header element (e.g., carousel)
         cy.get("#slider-carousel").then(($el) => {
-            const positionBefore = $el.position()
+            const positionBeforeScroll = $el.position();
 
-            // Scroll to the bottom of the page
-            cy.scrollTo('bottom')
+            // Step 2: Scroll down to the bottom of the page
+            cy.scrollTo('bottom');
 
-            // Verify that the footer content is visible
-            cy.get("#footer").should("be.visible")
+            // Assert that the footer becomes visible after scrolling to the bottom
+            cy.get("#footer").should("be.visible");
 
-            // Scroll up to the top of the page
-            cy.scrollTo('top')
+            // Step 3: Scroll back up to the top without clicking the "Arrow" button
+            cy.scrollTo('top');
 
-            // Step 3: Verify that important content (navigation links, headers) is visible again
-            cy.get("#slider-carousel").should("be.visible")
+            // Step 4: Verify that important content (e.g., headers, nav links) is visible again
+            cy.get("#slider-carousel").should("be.visible");
 
-            // Check that the position after scrolling matches the position before scrolling
+            // Verify the position after scrolling matches the position before scrolling
             cy.get("#slider-carousel").then(($elAfter) => {
-                const positionAfter = $elAfter.position()
-                expect(positionBefore.top).to.equal(positionAfter.top)
-            })
-        })
+                const positionAfterScroll = $elAfter.position();
+                expect(positionBeforeScroll.top).to.equal(positionAfterScroll.top);
+            });
+        });
+    });
 
-        // Step 4: Delete Account
-        // Assuming the user is already logged in or registered for this test
-        cy.signupUser(userCredentials) // Using the existing signupUser utility function
-        cy.get('[data-qa="continue-button"]').should('be.visible').click()
+    it("should delete the account after logging in", () => {
+        // Step 1: Log in or sign up a user using valid credentials from JSON
+        cy.signupUser(userCredentials);
 
-        // Click 'Delete Account' button
-        cy.contains("Delete Account").click()
-        
-        // Verify 'ACCOUNT DELETED!' and click 'Continue' button
-        cy.getElementAndAssertText('[data-qa="account-deleted"]', "Account Deleted!")
-        cy.get('[data-qa="continue-button"]').should("be.visible").click()
-    })        
-})
+        // Verify the user is successfully logged in and continue to the homepage
+        cy.get('[data-qa="continue-button"]').should('be.visible').click();
+
+        // Step 2: Delete the account
+        cy.contains("Delete Account").click();
+
+        // Step 3: Verify 'ACCOUNT DELETED!' confirmation and continue
+        cy.getElementAndAssertText('[data-qa="account-deleted"]', "Account Deleted!");
+        cy.get('[data-qa="continue-button"]').should("be.visible").click();
+    });
+
+});
