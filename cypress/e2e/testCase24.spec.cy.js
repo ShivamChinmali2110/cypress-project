@@ -4,9 +4,9 @@ const userCredentials = require('../fixtures/user-credentials.json')
 describe('Automation Exercise Web Application Testing', () => {  
   
   it("Test Case 24: Download Invoice after Purchase Order", () => {
-      // Step 1: Navigate to the Home Page
+      // Step 1: Navigate to the Home Page 
       cy.visit(userCredentials.baseUrl)
-
+      
       // Step 2: Create an Account or Log In
       // Incorrect Scenario: Attempt to Log In with Incorrect Credentials
       cy.contains("Signup / Login").click()
